@@ -21,7 +21,7 @@ class Converter:
     def __init__(self, data) -> None:
         submitted_number, original_base, intended_base = data.split()
         self.submitted_number = tuple(submitted_number.upper())
-        self.original_base = int(original_base) 
+        self.original_base = int(original_base)
         self.intended_base = int(intended_base)
 
     def assign_chars(self) -> None:
@@ -53,10 +53,10 @@ class Converter:
 
             if current_num not in self.original_base_chars:
                 raise ValueError("[number_to_be_converted] does not follow the [original_base] format")
-            
+
             original_value_in_decimal = self.original_base_chars.index(current_num)
             intended_value = original_value_in_decimal * (self.original_base**i)
-            
+
             self.calculated_decimal += intended_value
 
     def calculate_output(self) -> None:
@@ -68,7 +68,7 @@ class Converter:
         while calculated_decimal != 0:
             calculated_decimal, remainder = divmod(calculated_decimal, self.intended_base)
             self.output.append(self.intended_base_chars[remainder])
-    
+
     def reverse_and_join_output(self) -> str:
         """
         Reverse then join the output because the previous calculation is done in reverse.
