@@ -3,7 +3,7 @@ from string import digits, ascii_uppercase
 
 class Converter:
     """
-    Converts a number from one base to another
+    Convert a number from one base to another
     """
 
     chars_list = digits + ascii_uppercase
@@ -51,8 +51,6 @@ class Converter:
         for i in range(len(self.submitted_number)):
             current_num = self.submitted_number[0 - (i+1)]
 
-            print(current_num)
-
             if current_num not in self.original_base_chars:
                 raise ValueError("[number_to_be_converted] does not follow the [original_base] format")
             
@@ -77,6 +75,7 @@ class Converter:
         """
 
         self.output.reverse()
+
         return "".join(self.output)
 
     def execute(self) -> str:
