@@ -8,21 +8,13 @@ class Converter:
 
     chars_list = digits + ascii_uppercase
 
-    original_base = None
-    submitted_number = None
-    intended_base = None
-
-    original_base_chars = None
-    intended_base_chars = None
-
-    calculated_decimal = 0
-    output = list()
-
     def __init__(self, data) -> None:
         submitted_number, original_base, intended_base = data.split()
         self.submitted_number = tuple(submitted_number.upper())
         self.original_base = int(original_base)
         self.intended_base = int(intended_base)
+
+        self.output = list()
 
     def assign_chars(self) -> None:
         """
@@ -48,6 +40,7 @@ class Converter:
         Convert self.submitted_number to decimal.
         """
 
+        decimal_value = 0
         for i in range(len(self.submitted_number)):
             current_num = self.submitted_number[0 - (i+1)]
 
@@ -55,16 +48,18 @@ class Converter:
                 raise ValueError("[number_to_be_converted] does not follow the [original_base] format")
 
             original_value_in_decimal = self.original_base_chars.index(current_num)
-            intended_value = original_value_in_decimal * (self.original_base**i)
+            intended_value_index = original_value_in_decimal * (self.original_base**i)
 
-            self.calculated_decimal += intended_value
+            decimal_value += intended_value_index
 
-    def calculate_output(self) -> None:
+        return decimal_value
+
+    def calculate_output(self, decimal_value) -> None:
         """
         Calculate desired output.
         """
 
-        calculated_decimal = self.calculated_decimal
+        calculated_decimal = decimal_value
         while calculated_decimal != 0:
             calculated_decimal, remainder = divmod(calculated_decimal, self.intended_base)
             self.output.append(self.intended_base_chars[remainder])
@@ -85,8 +80,7 @@ class Converter:
 
         self.validation()
         self.assign_chars()
-        self.convert_to_decimal()
-        self.calculate_output()
+        self.calculate_output(self.convert_to_decimal())
 
         return self.reverse_and_join_output()
 
