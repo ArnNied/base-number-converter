@@ -1,4 +1,5 @@
 from string import digits, ascii_uppercase
+import json
 
 
 class Converter:
@@ -9,11 +10,12 @@ class Converter:
     chars_list = digits + ascii_uppercase
 
     def __init__(
-        self, submitted_number: str, original_base: str, target_base: str
+        self, original_number: str, original_base: str, target_base: str
     ) -> None:
-        self.submitted_number = tuple(submitted_number.upper())
+        self.original_number = tuple(original_number.upper())
         self.original_base = int(original_base)
         self.target_base = int(target_base)
+        self.executed = False
 
         self.output = list()
 
@@ -42,12 +44,12 @@ class Converter:
 
     def convert_to_decimal(self) -> None:
         """
-        Convert self.submitted_number to decimal.
+        Convert self.original_number to decimal.
         """
 
         decimal_value = 0
-        for i in range(len(self.submitted_number)):
-            current_num = self.submitted_number[0 - (i + 1)]
+        for i in range(len(self.original_number)):
+            current_num = self.original_number[0 - (i + 1)]
 
             if current_num not in self.original_base_chars:
                 raise ValueError(
@@ -71,13 +73,12 @@ class Converter:
             calculated_decimal, remainder = divmod(calculated_decimal, self.target_base)
             self.output.append(self.target_base_chars[remainder])
 
-    def reverse_and_join_output(self) -> str:
+    def get_output(self) -> str:
         """
         Reverse then join the output because the previous calculation is done in reverse.
         """
 
-        self.output.reverse()
-
+        # self.output.reverse()
         return "".join(self.output)
 
     def execute(self) -> str:
@@ -85,17 +86,19 @@ class Converter:
         Entry point.
         """
 
-        self.validation()
-        self.assign_chars()
-        self.calculate_output(self.convert_to_decimal())
+        if not self.executed:
+            self.validation()
+            self.assign_chars()
+            self.calculate_output(self.convert_to_decimal())
+            self.output.reverse()
+            self.executed = True
 
-        return self.reverse_and_join_output()
-
+        return self.get_output()
 
 print(
     """
 ======================================
-		BASE NUMBER CONVERTER
+        BASE NUMBER CONVERTER
 ======================================
 """
 )
@@ -108,10 +111,12 @@ while True:
 
     to_convert, original_base, target_base = user_input
 
-    result = Converter(
-        submitted_number=to_convert,
+    convert = Converter(
+        original_number=to_convert,
         original_base=original_base,
         target_base=target_base,
-    ).execute()
+    )
+
+    result = convert.execute()
 
     print(result)
