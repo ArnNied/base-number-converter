@@ -1,99 +1,102 @@
 from string import digits, ascii_uppercase
-import json
 
 
 class Converter:
     """
-    Convert a number from one base to another
+    Konversi sebuah angka dari satu basis ke basis lainnya
     """
 
-    chars_list = digits + ascii_uppercase
+    list_karakter = digits + ascii_uppercase
 
     def __init__(
-        self, original_number: str, original_base: str, target_base: str
+        self, angka_original: str, basis_original: str, basis_tujuan: str
     ) -> None:
-        self.original_number = tuple(original_number.upper())
-        self.original_base = int(original_base)
-        self.target_base = int(target_base)
-        self.executed = False
+        self.angka_original = tuple(angka_original.upper())
+        self.basis_original = int(basis_original)
+        self.basis_tujuan = int(basis_tujuan)
+        self.sudah_dieksekusi = False
 
         self.output = list()
 
-    def assign_chars(self) -> None:
+    def alokasi_karakter(self) -> None:
         """
-        Assign usable chars for original and intended base.
-        """
-
-        self.original_base_chars = self.chars_list[: self.original_base]
-        self.target_base_chars = self.chars_list[: self.target_base]
-
-    def validation(self) -> None:
-        """
-        Check if self.original_base or self.target_base is out of range.
+        Alokasi karakter yang dapat digunakan untuk basis original dan tujuan
         """
 
-        if self.original_base > len(self.chars_list) or self.original_base < 2:
+        self.karakter_basis_original = self.list_karakter[: self.basis_original]
+        self.karakter_basis_tujuan = self.list_karakter[: self.basis_tujuan]
+
+    def validasi(self) -> None:
+        """
+        Cek jika self.basis_original atau self.basis_tujuan diluar jangkauan
+        """
+
+        if not (2 < self.basis_original < len(self.list_karakter)):
             raise Exception(
-                f"[original_base] exceed the allowed base (2 - {len(self.chars_list)})"
+                f"[basis_original] exceed the allowed base (2 - {len(self.list_karakter)})"
             )
 
-        if self.target_base > len(self.chars_list) or self.target_base < 2:
+        if not (2 < self.basis_tujuan < len(self.list_karakter)):
             raise Exception(
-                f"[target_base] exceed the allowed base (2 - {len(self.chars_list)})"
+                f"[basis_tujuan] exceed the allowed base (2 - {len(self.list_karakter)})"
             )
 
-    def convert_to_decimal(self) -> None:
+    def konversi_ke_desimal(self) -> str:
         """
-        Convert self.original_number to decimal.
+        Konversi self.angka_original ke desimal
         """
 
-        decimal_value = 0
-        for i in range(len(self.original_number)):
-            current_num = self.original_number[0 - (i + 1)]
+        nilai_desimal = 0
+        for i in range(len(self.angka_original)):
+            # Diakses dari belakang
+            angka = self.angka_original[0 - (i + 1)]
 
-            if current_num not in self.original_base_chars:
+            if angka not in self.karakter_basis_original:
                 raise ValueError(
-                    "[number_to_be_converted] does not follow the [original_base] format"
+                    "[angka_untuk_dikonversi] does not follow the [basis_original] format"
                 )
 
-            original_value_in_decimal = self.original_base_chars.index(current_num)
-            intended_value_index = original_value_in_decimal * (self.original_base ** i)
+            nilai_original_dalam_desimal = (
+				self.karakter_basis_original.index(angka) 
+				* (self.basis_original ** i)
+            )
 
-            decimal_value += intended_value_index
+            # DEBUGGING / TESTING
+            # print(i, self.karakter_basis_original.index(angka), (self.basis_original ** i), nilai_original_dalam_desimal)
 
-        return decimal_value
+            nilai_desimal += nilai_original_dalam_desimal
 
-    def calculate_output(self, decimal_value) -> None:
+        return nilai_desimal
+
+    def kalkulasi_output(self, nilai_desimal: int) -> None:
         """
-        Calculate desired output.
-        """
-
-        calculated_decimal = decimal_value
-        while calculated_decimal != 0:
-            calculated_decimal, remainder = divmod(calculated_decimal, self.target_base)
-            self.output.append(self.target_base_chars[remainder])
-
-    def get_output(self) -> str:
-        """
-        Reverse then join the output because the previous calculation is done in reverse.
+        Kalkulasi output yang diinginkan
         """
 
-        # self.output.reverse()
+        untuk_dikalkulasi = nilai_desimal
+
+        while untuk_dikalkulasi != 0:
+            # DEBUGGING / TESTING
+            # print(divmod(untuk_dikalkulasi, self.basis_tujuan))
+
+            untuk_dikalkulasi, sisa_bagi = divmod(untuk_dikalkulasi, self.basis_tujuan)
+
+            self.output.append(self.karakter_basis_tujuan[sisa_bagi])
+
+    def eksekusi(self) -> str:
+        """
+        Pintu masuk.
+        """
+
+        if not self.sudah_dieksekusi:
+            self.validasi()
+            self.alokasi_karakter()
+            self.kalkulasi_output(self.konversi_ke_desimal())
+            self.output.reverse()
+            self.sudah_dieksekusi = True
+
         return "".join(self.output)
 
-    def execute(self) -> str:
-        """
-        Entry point.
-        """
-
-        if not self.executed:
-            self.validation()
-            self.assign_chars()
-            self.calculate_output(self.convert_to_decimal())
-            self.output.reverse()
-            self.executed = True
-
-        return self.get_output()
 
 print(
     """
@@ -102,21 +105,21 @@ print(
 ======================================
 """
 )
-print(f"Ordering (ltr): {Converter.chars_list}")
-print("Input: [number_to_be_converted] [original_base] [target_base]")
-print("Ex: 2748 10 16 -> ABC ")
+print(f"Urutan karakter (ltr): {Converter.list_karakter}")
+print("Input: [angka_untuk_dikonversi] [basis_original] [basis_tujuan]")
+print("Contoh: 2748 10 16 -> ABC")
 
 while True:
     user_input = input("\n> ").split()
 
-    to_convert, original_base, target_base = user_input
+    angka_original, basis_original, basis_tujuan = user_input
 
     convert = Converter(
-        original_number=to_convert,
-        original_base=original_base,
-        target_base=target_base,
+        angka_original=angka_original,
+        basis_original=basis_original,
+        basis_tujuan=basis_tujuan,
     )
 
-    result = convert.execute()
+    hasil = convert.eksekusi()
 
-    print(result)
+    print(hasil)
