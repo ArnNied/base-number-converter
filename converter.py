@@ -1,4 +1,14 @@
+import json
 from string import digits, ascii_uppercase
+
+class InvalidOriginalBase(Exception):
+    pass
+
+class InvalidTargetBase(Exception):
+    pass
+
+class CharacterOutOfRange(Exception):
+    pass
 
 
 class Converter:
@@ -10,7 +20,7 @@ class Converter:
 
     def __init__(
         self, angka_original: str, basis_original: str, basis_tujuan: str
-    ) -> None:
+    ) -> 'Converter':
         self.angka_original = tuple(angka_original.upper())
         self.basis_original = int(basis_original)
         self.basis_tujuan = int(basis_tujuan)
@@ -31,15 +41,11 @@ class Converter:
         Cek jika self.basis_original atau self.basis_tujuan diluar jangkauan
         """
 
-        if not (2 < self.basis_original < len(self.list_karakter)):
-            raise Exception(
-                f"[basis_original] exceed the allowed base (2 - {len(self.list_karakter)})"
-            )
+        if not (2 <= self.basis_original <= len(self.list_karakter)):
+            raise InvalidOriginalBase(f"Basis original ({self.basis_original}) diluar jangkauan (2-36)")
 
-        if not (2 < self.basis_tujuan < len(self.list_karakter)):
-            raise Exception(
-                f"[basis_tujuan] exceed the allowed base (2 - {len(self.list_karakter)})"
-            )
+        if not (2 <= self.basis_tujuan <= len(self.list_karakter)):
+            raise InvalidTargetBase(f"Basis tujuan ({convert.basis_original}) diluar jangkauan (2-36)")
 
     def konversi_ke_desimal(self) -> str:
         """
@@ -52,13 +58,11 @@ class Converter:
             angka = self.angka_original[0 - (i + 1)]
 
             if angka not in self.karakter_basis_original:
-                raise ValueError(
-                    "[angka_untuk_dikonversi] does not follow the [basis_original] format"
-                )
+                raise CharacterOutOfRange(f"Angka original ({''.join(self.angka_original)}) tidak mengikuti aturan basis original ({self.basis_original})")
 
             nilai_original_dalam_desimal = (
-				self.karakter_basis_original.index(angka) 
-				* (self.basis_original ** i)
+                self.karakter_basis_original.index(angka) 
+                * (self.basis_original ** i)
             )
 
             # DEBUGGING / TESTING
@@ -96,30 +100,23 @@ class Converter:
             self.sudah_dieksekusi = True
 
         return "".join(self.output)
-
-
-print(
-    """
-======================================
-        BASE NUMBER CONVERTER
-======================================
-"""
-)
-print(f"Urutan karakter (ltr): {Converter.list_karakter}")
-print("Input: [angka_untuk_dikonversi] [basis_original] [basis_tujuan]")
-print("Contoh: 2748 10 16 -> ABC")
-
-while True:
-    user_input = input("\n> ").split()
-
-    angka_original, basis_original, basis_tujuan = user_input
-
-    convert = Converter(
-        angka_original=angka_original,
-        basis_original=basis_original,
-        basis_tujuan=basis_tujuan,
-    )
-
-    hasil = convert.eksekusi()
-
-    print(hasil)
+    
+    def log(self, file_path: str = "./log"):
+        with open(f"{file_path}.json", "r+") as file:
+            data = json.load(file)
+            
+            try:
+                index = int(list(data.keys())[-1]) + 1
+            except IndexError:
+                index = 1
+            
+            data.update({
+                index: {
+                    "angka_original": "".join(self.angka_original),
+                    "basis_original": self.basis_original,
+                    "basis_tujuan": self.basis_tujuan,
+                    "hasil": "".join(self.output),
+                },
+            })
+            file.seek(0)
+            json.dump(data, file, indent=2)
