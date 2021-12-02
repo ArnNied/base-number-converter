@@ -1,4 +1,9 @@
-from converter import Converter, InvalidOriginalBase, InvalidTargetBase, CharacterOutOfRange
+from converter import (
+    Converter,
+    InvalidOriginalBase,
+    InvalidTargetBase,
+    CharacterOutOfRange,
+)
 
 print(
     """
@@ -41,7 +46,9 @@ while True:
         continue
 
     except CharacterOutOfRange:
-        print(f"Angka original ({''.join(convert.angka_original)}) tidak mengikuti aturan basis original ({convert.basis_original})")
+        print(
+            f"Angka original ({''.join(convert.angka_original)}) tidak mengikuti aturan basis original ({convert.basis_original})"
+        )
         continue
 
     convert.log()
