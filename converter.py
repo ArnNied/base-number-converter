@@ -113,7 +113,7 @@ class Converter:
 
         return "".join(self.output)
 
-    def log(self, file_path: str = "./log", force: bool = True):
+    def log(self, file_path: str = "./log", force: bool = False):
         """
         Mencatat semua atribut ke dalam sebuah file json
         """
