@@ -5,13 +5,10 @@ from converter import (
     CharacterOutOfRange,
 )
 
-print(
-    """
-======================================
-        BASE NUMBER CONVERTER
-======================================
-"""
-)
+print("======================================")
+print("\t\tBASE NUMBER CONVERTER")
+print("======================================")
+
 print(f"Urutan karakter (ltr): {Converter.list_karakter}")
 print("Input: [angka_untuk_dikonversi] [basis_original] [basis_tujuan]")
 print("Contoh: 2748 10 16 -> ABC")
