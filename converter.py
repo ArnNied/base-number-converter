@@ -1,5 +1,4 @@
 from string import digits, ascii_uppercase
-import json
 
 
 class Converter:
@@ -32,12 +31,12 @@ class Converter:
         Check if self.original_base or self.target_base is out of range.
         """
 
-        if self.original_base > len(self.chars_list) or self.original_base < 2:
+        if not (2 <= self.original_base <= len(self.chars_list)):
             raise Exception(
                 f"[original_base] exceed the allowed base (2 - {len(self.chars_list)})"
             )
 
-        if self.target_base > len(self.chars_list) or self.target_base < 2:
+        if not (2 <= self.original_base <= len(self.chars_list)):
             raise Exception(
                 f"[target_base] exceed the allowed base (2 - {len(self.chars_list)})"
             )
@@ -56,8 +55,9 @@ class Converter:
                     "[number_to_be_converted] does not follow the [original_base] format"
                 )
 
-            original_value_in_decimal = self.original_base_chars.index(current_num)
-            intended_value_index = original_value_in_decimal * (self.original_base ** i)
+            character_value_in_decimal = (
+                self.original_base_chars.index(current_num) * self.original_base ** i
+            )
 
             decimal_value += intended_value_index
 
@@ -71,15 +71,8 @@ class Converter:
         calculated_decimal = decimal_value
         while calculated_decimal != 0:
             calculated_decimal, remainder = divmod(calculated_decimal, self.target_base)
+
             self.output.append(self.target_base_chars[remainder])
-
-    def get_output(self) -> str:
-        """
-        Reverse then join the output because the previous calculation is done in reverse.
-        """
-
-        # self.output.reverse()
-        return "".join(self.output)
 
     def execute(self) -> str:
         """
@@ -93,15 +86,13 @@ class Converter:
             self.output.reverse()
             self.executed = True
 
-        return self.get_output()
+        return "".join(self.output)
 
-print(
-    """
-======================================
-        BASE NUMBER CONVERTER
-======================================
-"""
-)
+
+print("======================================")
+print("\tBASE NUMBER CONVERTER")
+print("======================================")
+
 print(f"Ordering (ltr): {Converter.chars_list}")
 print("Input: [number_to_be_converted] [original_base] [target_base]")
 print("Ex: 2748 10 16 -> ABC ")
