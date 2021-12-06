@@ -15,7 +15,7 @@ class IllegalCharacter(Exception):
 
 
 class IsNotConverted(Exception):
-	pass
+    pass
 
 
 class Converter:
@@ -45,17 +45,17 @@ class Converter:
 
     def validation(self) -> None:
         """
-        Check if self.original_base or self.target_base is out of range.
+        Raise exception if self.original_base or self.target_base is out of range.
         """
 
         if not (2 <= self.original_base <= len(self.chars_list)):
             raise InvalidOriginalBase(
-                f"[original_base] exceed the allowed base (2 - {len(self.chars_list)})"
+                f"`original_base` ({self.original_base}) exceed the allowed base (2 - {len(self.chars_list)})"
             )
 
         if not (2 <= self.target_base <= len(self.chars_list)):
             raise InvalidTargetBase(
-                f"[target_base] exceed the allowed base (2 - {len(self.chars_list)})"
+                f"`target_base` ({self.target_base}) exceed the allowed base (2 - {len(self.chars_list)})"
             )
 
     def convert_to_decimal(self) -> None:
@@ -69,7 +69,7 @@ class Converter:
 
             if current_num not in self.original_base_chars:
                 raise IllegalCharacter(
-                    "[original_number] does not follow the [original_base] format"
+                    f"`original_number` ({self.original_number}) does not follow the `original_base` ({self.original_base}) format"
                 )
 
             character_value_in_decimal = (
