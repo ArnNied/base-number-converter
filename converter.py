@@ -59,7 +59,7 @@ class Converter:
                 self.original_base_chars.index(current_num) * self.original_base ** i
             )
 
-            decimal_value += intended_value_index
+            decimal_value += character_value_in_decimal
 
         return decimal_value
 
@@ -87,27 +87,3 @@ class Converter:
             self.executed = True
 
         return "".join(self.output)
-
-
-print("======================================")
-print("\tBASE NUMBER CONVERTER")
-print("======================================")
-
-print(f"Ordering (ltr): {Converter.chars_list}")
-print("Input: [number_to_be_converted] [original_base] [target_base]")
-print("Ex: 2748 10 16 -> ABC ")
-
-while True:
-    user_input = input("\n> ").split()
-
-    to_convert, original_base, target_base = user_input
-
-    convert = Converter(
-        original_number=to_convert,
-        original_base=original_base,
-        target_base=target_base,
-    )
-
-    result = convert.execute()
-
-    print(result)
