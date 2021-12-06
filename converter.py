@@ -1,4 +1,16 @@
-from string import digits, ascii_uppercase
+from string import ascii_uppercase, digits
+
+
+class InvalidOriginalBase(Exception):
+    pass
+
+
+class InvalidTargetBase(Exception):
+    pass
+
+
+class IllegalCharacter(Exception):
+    pass
 
 
 class Converter:
@@ -32,12 +44,12 @@ class Converter:
         """
 
         if not (2 <= self.original_base <= len(self.chars_list)):
-            raise Exception(
+            raise InvalidOriginalBase(
                 f"[original_base] exceed the allowed base (2 - {len(self.chars_list)})"
             )
 
-        if not (2 <= self.original_base <= len(self.chars_list)):
-            raise Exception(
+        if not (2 <= self.target_base <= len(self.chars_list)):
+            raise InvalidTargetBase(
                 f"[target_base] exceed the allowed base (2 - {len(self.chars_list)})"
             )
 
@@ -51,8 +63,8 @@ class Converter:
             current_num = self.original_number[0 - (i + 1)]
 
             if current_num not in self.original_base_chars:
-                raise ValueError(
-                    "[number_to_be_converted] does not follow the [original_base] format"
+                raise IllegalCharacter(
+                    "[original_number] does not follow the [original_base] format"
                 )
 
             character_value_in_decimal = (
