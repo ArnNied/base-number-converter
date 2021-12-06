@@ -1,53 +1,59 @@
-  from converter import (
-      Converter,
-      InvalidOriginalBase,
-      InvalidTargetBase,
-      CharacterOutOfRange,
-  )
+from converter import (
+	Converter,
+	InvalidOriginalBase,
+	InvalidTargetBase,
+	CharacterOutOfRange,
+)
 
-  print("======================================")
-  print("\tBASE NUMBER CONVERTER")
-  print("======================================")
+print("======================================")
+print("\tBASE NUMBER CONVERTER")
+print("======================================")
 
-  print(f"Urutan karakter (ltr): {Converter.list_karakter}")
-  print("Input: [angka_untuk_dikonversi] [basis_original] [basis_tujuan]")
-  print("Contoh: 2748 10 16 -> ABC")
+print(f"Urutan karakter (ltr): {Converter.list_karakter}")
+print("Input: [angka_untuk_dikonversi] [basis_original] [basis_tujuan]")
+print("Contoh: 2748 10 16 -> ABC")
 
 
-  while True:
-      user_input = input("\n> ").split()
+while True:
+	try:
+		user_input = input("\n> ").split()
+	except KeyboardInterrupt:
+		print(" \n\n!!! Program dihentikan !!!\n\n")
+		exit()
 
-      try:
-          angka_original, basis_original, basis_tujuan = user_input
-      except ValueError:
-          print("Masukkan input dengan benar")
-          continue
 
-      try:
-          convert = Converter(
-              angka_original=angka_original,
-              basis_original=basis_original,
-              basis_tujuan=basis_tujuan,
-          )
-          hasil = convert.eksekusi()
-      except ValueError:
-          print("Masukkan input dengan benar")
-          continue
+	try:
+		angka_original, basis_original, basis_tujuan = user_input
+	except ValueError:
+		print("Masukkan input dengan benar")
+		continue
 
-      except InvalidOriginalBase:
-          print(f"Basis original ({convert.basis_original}) diluar jangkauan (2-36)")
-          continue
 
-      except InvalidTargetBase:
-          print(f"Basis tujuan ({convert.basis_tujuan}) diluar jangkauan (2-36)")
-          continue
+	try:
+		convert = Converter(
+			angka_original=angka_original,
+			basis_original=basis_original,
+			basis_tujuan=basis_tujuan,
+		)
+		hasil = convert.eksekusi()
+	except ValueError:
+		print("Masukkan input dengan benar")
+		continue
 
-      except CharacterOutOfRange:
-          print(
-              f"Angka original ({''.join(convert.angka_original)}) tidak mengikuti aturan basis original ({convert.basis_original})"
-          )
-          continue
+	except InvalidOriginalBase:
+		print(f"Basis original ({convert.basis_original}) diluar jangkauan (2-36)")
+		continue
 
-      convert.log()
+	except InvalidTargetBase:
+		print(f"Basis tujuan ({convert.basis_tujuan}) diluar jangkauan (2-36)")
+		continue
 
-      print(hasil)
+	except CharacterOutOfRange:
+		print(
+			f"Angka original ({''.join(convert.angka_original)}) tidak mengikuti aturan basis original ({convert.basis_original})"
+		)
+		continue
+
+	convert.log()
+
+	print(hasil)

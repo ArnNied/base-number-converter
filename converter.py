@@ -47,7 +47,7 @@ class Converter:
 
         if not (2 <= self.basis_tujuan <= len(self.list_karakter)):
             raise InvalidTargetBase(
-                f"Basis tujuan ({self.basis_original}) diluar jangkauan (2-{len(self.list_karakter)})"
+                f"Basis tujuan ({self.basis_tujuan}) diluar jangkauan (2-{len(self.list_karakter)})"
             )
 
     def alokasi_karakter(self) -> None:
