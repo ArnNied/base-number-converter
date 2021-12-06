@@ -1,3 +1,4 @@
+import json
 from string import ascii_uppercase, digits
 
 
@@ -11,6 +12,10 @@ class InvalidTargetBase(Exception):
 
 class IllegalCharacter(Exception):
     pass
+
+
+class IsNotConverted(Exception):
+	pass
 
 
 class Converter:
@@ -99,3 +104,37 @@ class Converter:
             self.executed = True
 
         return "".join(self.output)
+
+    def log(self, file_path: str = "./log", force: bool = False):
+        """
+        Log data to a json file.
+
+        file_path: `str`. Path for the json file.
+        force: `bool`. set to `True` to force data to be logged even if it's not converted yet.
+        """
+
+        if self.executed or force:
+            with open(f"{file_path}.json", "r+") as file:
+                data = json.load(file)
+
+                try:
+                    index = int(list(data.keys())[-1]) + 1
+                except IndexError:
+                    index = 1
+
+                data.update(
+                    {
+                        index: {
+                            "original_number": "".join(self.original_number),
+                            "original_base": self.original_base,
+                            "target_base": self.target_base,
+                            "result": "".join(self.output),
+                        }
+                    }
+                )
+                file.seek(0)
+                json.dump(data, file, indent=2)
+        else:
+            raise IsNotConverted(
+                "Data hasn't been converted, add `force=True` to ignore"
+            )
