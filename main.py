@@ -1,4 +1,9 @@
-from converter import Converter
+from converter import (
+    Converter,
+    IllegalCharacter,
+    InvalidOriginalBase,
+    InvalidTargetBase,
+)
 
 
 print("======================================")
@@ -12,14 +17,37 @@ print("Ex: 2748 10 16 -> ABC ")
 while True:
     user_input = input("\n> ").split()
 
-    to_convert, original_base, target_base = user_input
+    try:
+        original_number, original_base, target_base = user_input
+    except ValueError:
+        print("Invalid input")
+        continue
 
-    convert = Converter(
-        original_number=to_convert,
-        original_base=original_base,
-        target_base=target_base,
-    )
+    try:
+        convert = Converter(
+            original_number=original_number,
+            original_base=original_base,
+            target_base=target_base,
+        )
+        result = convert.execute()
+    except ValueError:
+        print("Invalid input")
+        continue
 
-    result = convert.execute()
+    except InvalidOriginalBase:
+        print(f"Original base ({convert.original_base}) is out of range (2-36)")
+        continue
+
+    except InvalidTargetBase:
+        print(f"Target base ({convert.target_base}) is out of range (2-36)")
+        continue
+
+    except IllegalCharacter:
+        print(
+            f"Original number ({''.join(convert.original_number)}) does not follow it's base format ({convert.original_base})"
+        )
+        continue
+
+    convert.log()
 
     print(result)
